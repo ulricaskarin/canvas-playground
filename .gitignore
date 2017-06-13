@@ -1,0 +1,26 @@
+# LOG FILES
+logs
+*.log
+npm-debug.log*
+
+# ENV VARIABLES
+.env
+
+# CONFIG
+*.config.js
+*config.js
+ecosystem.config.js
+
+# DEPENDENCY DIRECTORIES
+*node_modules
+jspm_packages
+eslintrc.json
+
+# BUILD FILES
+*-compiled.js
+*-compiled.js.map
+
+# OTHER
+.vagrant
+idea
+.idea

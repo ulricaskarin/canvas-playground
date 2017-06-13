@@ -1,0 +1,39 @@
+{
+  "name": "canvas-playground",
+  "version": "1.0.0",
+  "description": "Playing with Canvas and Javascript",
+  "main": "server.js",
+  "scripts": {
+    "dev": "concurrently --kill-others \"npm run start\" \"npm run watch\"",
+    "start": "nodemon server.js",
+    "watch": "watchify client/js/app.js -o public/js/bundle.js -v",
+    "build": "browserify client/js/app.js -o public/js/bundle.js",
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ulricaskarin/canvas-playground.git"
+  },
+  "keywords": [
+    "javascript",
+    "node",
+    "games",
+    "canvas"
+  ],
+  "author": "ulricaskarin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ulricaskarin/canvas-playground/issues"
+  },
+  "homepage": "https://github.com/ulricaskarin/canvas-playground#readme",
+  "dependencies": {
+    "express": "^4.15.3",
+    "express-handlebars": "^3.0.0"
+  },
+  "devDependencies": {
+    "browserify": "^14.4.0",
+    "concurrently": "^3.4.0",
+    "nodemon": "^1.11.0",
+    "watchify": "^3.9.0"
+  }
+}
