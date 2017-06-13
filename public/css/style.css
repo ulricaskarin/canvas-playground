@@ -1,0 +1,17 @@
+@import url('https://fonts.googleapis.com/css?family=Lobster');
+
+html {
+    height: 100%;
+}
+body {
+    height: 100%;
+    padding-top: 30px;
+    background-color: #f78137;
+}
+canvas {
+    border: 2px solid black;
+    max-width: 604px;
+    max-height: 404px;
+
+    background: url('../img/canvas-bg2.png')
+}
