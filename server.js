@@ -17,7 +17,7 @@ const express = require('express'),
 
 let server = {};
 let app = express();
-let PORT = config.PORT || 9966;
+let PORT = config.PORT || 3366;
 
 app.set('views', path.join(__dirname, '/views'));
 app.engine('.hbs', exphbs({
@@ -32,11 +32,24 @@ app.set('view engine', '.hbs');
 app.use(express.static(path.join(__dirname, 'public')));
 app.disable('x-powered-by');
 
+if(!module.parent) {
+    server = http.createServer(app).listen(PORT, () => {
+        console.log(`Games served at: ${PORT} in ${app.settings.env} mode`);
+    });
+}
+
+const io = require('socket.io')(server);
+app.use((req, res, next) => {
+    req.io = io;
+    next();
+});
+
 const appServer = require('./routes/index');
 app.use('/', appServer);
 
-if(!module.parent) {
-    server = http.createServer(app).listen(PORT, () => {
-        console.log(`Game served at: ${PORT} in ${app.settings.env} mode`);
-    });
-}
+let ConnectIO = require('./controllers/ConnectIO.js');
+new ConnectIO(io);
+
+module.exports = {
+    app : app
+};
