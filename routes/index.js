@@ -9,10 +9,12 @@
 
 const router = require('express').Router();
 
+// Load routes
+router.use(require('./breakout'));
+
 router.get('/', (req, res, next) => {
     res.render('home/index');
 });
-
 
 /**
  * Error Handling.
