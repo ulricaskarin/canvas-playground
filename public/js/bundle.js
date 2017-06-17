@@ -1,5 +1,54 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 /**
+ * Socket client-side functionality.
+ *
+ * @author Ulrica Skarin
+ * @version 1.0.0
+ */
+
+'use strict';
+
+let Breakout = require('./games/Breakout.js');
+
+// Constants:
+const CONNECT_ERROR = 'Error connecting to socket.io.',
+    RECONNECT_FAILURE = 'Failing to reconnect to socket.io. Giving up!';
+
+/**
+ * Socket constructor.
+ * @constructor
+ */
+function Socket() {
+
+    this.socket = io({
+        'reconnection': true,
+        'reconnectionDelay': 500,
+        'reconnectionAttempts': 5
+    });
+
+    this.startUp();
+}
+
+/**
+ * Starts Socket functionality.
+ */
+Socket.prototype.startUp = function() {
+
+    this.socket.on('connect_error', () => {
+        console.warn(`${CONNECT_ERROR}`);
+    });
+    this.socket.on('reconnect_failed', () =>  {
+        console.error(`${RECONNECT_FAILURE}`);
+    });
+    this.socket.on('breakout', () =>  {
+        console.log('breakout game called');
+        new Breakout();
+    });
+};
+
+module.exports = Socket;
+},{"./games/Breakout.js":3}],2:[function(require,module,exports){
+/**
  * App.js - sets of client-side JS functionality.
  *
  * @author Ulrica Skarin
@@ -8,21 +57,25 @@
 
 'use strict';
 
-let BreakOut = require('./games/Breakout.js');
+let Socket = require('./Socket.js');
 
 (function start() {
 
-    new BreakOut();
+    try{
+        new Socket();
 
-    if (localStorage) {
+        if (localStorage) {
 
-        if(localStorage.getItem('highscore')){
+            if(localStorage.getItem('highscore')){
 
-            // Highscore handling etc.
+                // Highscore handling etc.
+            }
         }
+    } catch (e) {
+        console.log(`${e}`);
     }
 })();
-},{"./games/Breakout.js":2}],2:[function(require,module,exports){
+},{"./Socket.js":1}],3:[function(require,module,exports){
 /**
  * Breakout Game.
  *
@@ -38,16 +91,19 @@ let BreakOut = require('./games/Breakout.js');
  */
 function Breakout() {
 
+
     this.canvas = document.querySelector('#canvas-breakout');
     this.ctx = this.canvas.getContext('2d');
 
-    this.x = this.canvas.width/2;
+    this.x = this.canvas.width / 2;
     this.y = this.canvas.height -30;
     this.dx = 2;
     this.dy = -2;
 
-    this.ballRadius = 15;
+    this.boundaries = this.canvas.getBoundingClientRect();
+    this.offsetX = this.boundaries.left;
 
+    this.ballRadius = 15;
     this.paddleHeight = 10;
     this.paddleWidth = 110;
     this.paddleX = (this.canvas.width - this.paddleWidth) / 2;
@@ -57,7 +113,7 @@ function Breakout() {
 
     this.bricks = [];
     this.brickRowCount = 6;
-    this.brickColumnCount = 5;
+    this.brickColumnCount = 6;
     this.brickWidth = 75;
     this.brickHeight = 20;
     this.brickPadding = 10;
@@ -80,11 +136,8 @@ function Breakout() {
 Breakout.prototype.fillScreenWithBricks = function() {
 
     for(var i = 0; i < this.brickColumnCount; i++) {
-
         this.bricks[i] = [];
-
         for(var j = 0; j < this.brickRowCount; j++) {
-
             this.bricks[i][j] = {x: 0, y: 0, status: 1};
         }
     }
@@ -378,12 +431,17 @@ Breakout.prototype.keyUpHandler = function(event) {
  */
 Breakout.prototype.mouseMoveHandler = function(event) {
 
-    let relativeX = event.clientX - this.canvas.offsetLeft;
+    event = event || window.event;
+    event.preventDefault();
+    event.stopPropagation();
+
+    let relativeX = event.clientX - this.offsetX;
 
     if(relativeX > 0 && relativeX < this.canvas.width) {
         this.paddleX = relativeX - this.paddleWidth / 2;
     }
+
 };
 
 module.exports = Breakout;
-},{}]},{},[1]);
+},{}]},{},[2]);
