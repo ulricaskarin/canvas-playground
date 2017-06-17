@@ -13,16 +13,19 @@
  */
 function Breakout() {
 
+
     this.canvas = document.querySelector('#canvas-breakout');
     this.ctx = this.canvas.getContext('2d');
 
-    this.x = this.canvas.width/2;
+    this.x = this.canvas.width / 2;
     this.y = this.canvas.height -30;
     this.dx = 2;
     this.dy = -2;
 
-    this.ballRadius = 15;
+    this.boundaries = this.canvas.getBoundingClientRect();
+    this.offsetX = this.boundaries.left;
 
+    this.ballRadius = 15;
     this.paddleHeight = 10;
     this.paddleWidth = 110;
     this.paddleX = (this.canvas.width - this.paddleWidth) / 2;
@@ -32,7 +35,7 @@ function Breakout() {
 
     this.bricks = [];
     this.brickRowCount = 6;
-    this.brickColumnCount = 5;
+    this.brickColumnCount = 6;
     this.brickWidth = 75;
     this.brickHeight = 20;
     this.brickPadding = 10;
@@ -55,11 +58,8 @@ function Breakout() {
 Breakout.prototype.fillScreenWithBricks = function() {
 
     for(var i = 0; i < this.brickColumnCount; i++) {
-
         this.bricks[i] = [];
-
         for(var j = 0; j < this.brickRowCount; j++) {
-
             this.bricks[i][j] = {x: 0, y: 0, status: 1};
         }
     }
@@ -353,11 +353,16 @@ Breakout.prototype.keyUpHandler = function(event) {
  */
 Breakout.prototype.mouseMoveHandler = function(event) {
 
-    let relativeX = event.clientX - this.canvas.offsetLeft;
+    event = event || window.event;
+    event.preventDefault();
+    event.stopPropagation();
+
+    let relativeX = event.clientX - this.offsetX;
 
     if(relativeX > 0 && relativeX < this.canvas.width) {
         this.paddleX = relativeX - this.paddleWidth / 2;
     }
+
 };
 
 module.exports = Breakout;

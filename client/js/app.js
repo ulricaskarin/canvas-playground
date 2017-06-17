@@ -7,17 +7,21 @@
 
 'use strict';
 
-let BreakOut = require('./games/Breakout.js');
+let Socket = require('./Socket.js');
 
 (function start() {
 
-    new BreakOut();
+    try{
+        new Socket();
 
-    if (localStorage) {
+        if (localStorage) {
 
-        if(localStorage.getItem('highscore')){
+            if(localStorage.getItem('highscore')){
 
-            // Highscore handling etc.
+                // Highscore handling etc.
+            }
         }
+    } catch (e) {
+        console.log(`${e}`);
     }
 })();
