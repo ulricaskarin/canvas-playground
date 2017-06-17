@@ -2,19 +2,16 @@
 <html lang="en">
 {{>head}}
 <body class="adjust" id="top" data-spy="scroll" data-target=".undernav" data-offset="80">
-{{>navbar}}
-<div class="wrap">
-    <div class="page-heading">
-        <h1>{{heading}}</h1>
-    </div>
-    <div class="container-fluid">
-        <div class="row">
-            {{#if flash}}{{>flash}}{{/if}}
-            {{{body}}}
+    <div id="contain-out">
+        <div id="wrapper"><div id="top"></div>
+            <div id="contain">
+                {{>header}}
+                {{{body}}}
+                {{>footer}}
+            </div>
         </div>
     </div>
-</div>
-{{>footer}}
+<script src="/socket.io/socket.io.js"></script>
 <script src="/js/bundle.js"></script>
 </body>
 </html>
